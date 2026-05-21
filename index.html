@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Roxana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Paleta Champagne Premium - Silent Luxury */
+            --bg-dark: #fcfaf8; /* Blanco crema muy suave */
+            --bg-bayou: linear-gradient(135deg, #f5eadd 0%, #e6d3c0 100%); /* Champagne satinado */
+            --gold-primary: #c5a880; /* Dorado Champagne / Arena metálico */
+            --gold-secondary: #e8dcca; /* Champagne claro para bordes */
+            --text-light: #4a4138; /* Marrón agrisado muy oscuro para contraste elegante */
+            --text-muted: #96887a; /* Tono topo/arena para textos secundarios */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            width: 100%; height: 100%; font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark); color: var(--text-light);
+            overflow-x: hidden; transition: background-color 0.5s ease;
+        }
+
+        /* Pantalla del Sobre */
+        #envelope-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-bayou); z-index: 1000; display: flex; justify-content: center; align-items: center;
+            transition: opacity 1.2s ease-in-out, visibility 1.2s; overflow: hidden;
+        }
+
+        #envelope-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .envelope-wrapper { position: relative; cursor: pointer; transform: scale(0.9); transition: transform 0.5s ease; }
+        .envelope-wrapper:hover { transform: scale(0.95); }
+
+        .envelope {
+            position: relative; width: 340px; height: 240px; background: var(--gold-secondary);
+            border-radius: 0 0 8px 8px; box-shadow: 0 20px 40px rgba(74, 65, 56, 0.1);
+        }
+
+        .envelope::before {
+            content: ''; position: absolute; top: 0; right: 0; border-right: 170px solid var(--gold-primary);
+            border-top: 120px solid transparent; border-bottom: 120px solid var(--gold-primary);
+            border-radius: 0 0 8px 0; z-index: 2;
+        }
+
+        .envelope::after {
+            content: ''; position: absolute; top: 0; left: 0; border-left: 170px solid var(--gold-primary);
+            border-top: 120px solid transparent; border-bottom: 120px solid var(--gold-primary);
+            border-radius: 0 0 0 8px; z-index: 2;
+        }
+
+        .front-flap {
+            position: absolute; top: 0; left: 0; border-left: 170px solid transparent; border-right: 170px solid transparent;
+            border-top: 130px solid #b3956e; /* Tono ligeramente más oscuro para la solapa */
+            transform-origin: top; transition: transform 0.6s ease 0.2s; z-index: 4;
+        }
+
+        .envelope-wrapper.open .front-flap { transform: rotateX(180deg); z-index: 1; }
+
+        .wax-seal {
+            position: absolute; top: 110px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px;
+            background: var(--bg-dark); border-radius: 50%; z-index: 5; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
+            transition: transform 0.4s ease, opacity 0.4s ease 0.4s; border: 2px solid var(--gold-primary);
+        }
+
+        .wax-seal svg { width: 30px; height: 30px; fill: var(--text-muted); }
+        .envelope-wrapper.open .wax-seal { transform: translateX(-50%) scale(0); opacity: 0; }
+
+        .envelope-text {
+            position: absolute; bottom: -50px; width: 100%; text-align: center; font-family: 'Cinzel', serif; font-size: 14px;
+            color: var(--text-light); letter-spacing: 3px; text-transform: uppercase; font-weight: 600;
+        }
+
+        .hint-text {
+            position: absolute; bottom: -80px; width: 100%; text-align: center; font-family: 'Montserrat', sans-serif;
+            font-size: 11px; color: var(--text-muted); letter-spacing: 1px; opacity: 0.8; animation: pulse 2s infinite;
+        }
+
+        /* Invitación Principal */
+        #main-invitation {
+            min-height: 100vh; background: url('assets/imagen.jpg') no-repeat center center; background-size: cover;
+            background-attachment: fixed; position: relative; display: flex; flex-direction: column; align-items: center;
+            padding: 60px 20px; opacity: 0; transform: translateY(20px); transition: opacity 1.5s ease-out 0.6s, transform 1.5s ease-out 0.6s;
+        }
+
+        body.content-active #main-invitation { opacity: 1; transform: translateY(0); }
+
+        .invitation-frame {
+            max-width: 500px; width: 100%; border: 1px solid var(--gold-secondary); padding: 40px 30px; text-align: center;
+            position: relative; background: rgba(252, 250, 248, 0.85); box-shadow: 0 15px 35px rgba(74, 65, 56, 0.08);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 4px;
+        }
+
+        .lotus-header svg { width: 60px; height: 60px; fill: var(--gold-primary); margin-bottom: 20px; }
+
+        .section-tag { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+        .main-title { font-family: 'Pinyon Script', cursive; font-size: 65px; color: var(--text-light); margin-bottom: 15px; line-height: 1.1; }
+        .phrase { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: var(--text-light); line-height: 1.6; margin-bottom: 35px; padding: 0 15px; }
+        .divider { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--gold-primary), transparent); margin: 25px auto; }
+
+        .info-block { margin-bottom: 30px; }
+        .info-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+        .info-value-main { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 600; color: var(--text-light); letter-spacing: 2px; }
+        .info-value-sub { font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--text-light); margin-top: 5px; letter-spacing: 1px; }
+
+        .countdown-grid { display: flex; justify-content: center; gap: 15px; margin: 25px auto 10px auto; max-width: 350px; }
+        .countdown-item { flex: 1; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--gold-secondary); padding: 10px 5px; border-radius: 4px; }
+        .countdown-number { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--text-light); display: block; }
+        .countdown-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
+
+        .map-card { margin-top: 20px; border: 1px solid var(--gold-secondary); background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 6px; text-align: left; }
+        .map-wrapper { width: 100%; height: 200px; margin-top: 12px; border-radius: 4px; overflow: hidden; border: 1px solid var(--gold-secondary); }
+
+        .btn-whatsapp {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-top: 25px; padding: 14px 30px;
+            background: var(--text-light); color: #ffffff; border: 1px solid var(--text-light); font-family: 'Cinzel', serif;
+            font-size: 12px; letter-spacing: 2px; text-decoration: none; text-transform: uppercase; cursor: pointer;
+            transition: all 0.4s ease; font-weight: 600; border-radius: 4px;
+        }
+        .btn-whatsapp:hover { background: #ffffff; color: var(--text-light); transform: translateY(-2px); }
+
+        .flower-petal { position: absolute; background-color: var(--gold-primary); border-radius: 150% 0 150% 0; pointer-events: none; animation: float-up infinite ease-in; opacity: 0; }
+
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes float-up {
+            0% { transform: translateY(0) translateX(0) rotate(0deg) scale(0.5); opacity: 0; }
+            15% { opacity: 0.6; } 85% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) translateX(50px) rotate(360deg) scale(1); opacity: 0; }
+        }
+
+        @media (max-width: 400px) {
+            .envelope { width: 290px; height: 210px; }
+            .envelope::before { border-right-width: 145px; border-top-width: 105px; border-bottom-width: 105px; }
+            .envelope::after { border-left-width: 145px; border-top-width: 105px; border-bottom-width: 105px; }
+            .front-flap { border-left-width: 145px; border-right-width: 145px; border-top-width: 115px; }
+            .wax-seal { top: 95px; }
+            .main-title { font-size: 48px; }
+            .invitation-frame { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="envelope-screen">
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+            <div class="front-flap"></div>
+            <div class="wax-seal">
+                <svg viewBox="0 0 24 24"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.55 18.55 20 18 20H6C5.45 20 5 19.55 5 19V18H19V19Z"/></svg>
+            </div>
+            <div class="envelope"></div>
+            <div class="envelope-text">Mis XV Años<br><span id="sobre-nombre" style="color: var(--text-light); font-size: 16px; letter-spacing: 5px; font-weight: 600;">Roxana</span></div>
+            <div class="hint-text">Toca el sello para abrir</div>
+        </div>
+    </div>
+
+    <main id="main-invitation">
+        <div id="lanterns-container" style="position: absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:1;"></div>
+
+        <div class="invitation-frame" style="z-index: 2;">
+            <div class="lotus-header">
+                <svg viewBox="0 0 24 24"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.55 18.55 20 18 20H6C5.45 20 5 19.55 5 19V18H19V19Z"/></svg>
+            </div>
+
+            <div class="section-tag">Mis XV Años</div>
+            <h1 class="main-title" id="main-nombre">Roxana</h1>
+            
+            <p class="phrase">"Hoy empieza una nueva etapa mágica en mi vida, llena de ilusiones y momentos que deseo conservar por siempre. Quiero compartir esta noche tan especial con las personas que más quiero."</p>
+
+            <div class="divider"></div>
+
+            <div class="section-tag">Cuenta Atrás</div>
+            <div class="countdown-grid" id="countdown-timer">
+                <div class="countdown-item"><span class="countdown-number" id="days">00</span><span class="countdown-label">Días</span></div>
+                <div class="countdown-item"><span class="countdown-number" id="hours">00</span><span class="countdown-label">Hrs</span></div>
+                <div class="countdown-item"><span class="countdown-number" id="minutes">00</span><span class="countdown-label">Min</span></div>
+                <div class="countdown-item"><span class="countdown-number" id="seconds">00</span><span class="countdown-label">Seg</span></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-grid">
+                <div class="info-block">
+                    <div class="info-label">Fecha</div>
+                    <div class="info-value-main" id="main-fecha">04.JUL.2026</div>
+                    <div class="info-value-sub">Día del Evento</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="info-block">
+                    <div class="info-label">Ubicación</div>
+                    <div class="info-value-main" id="main-ciudad">Jocotepec, Jal.</div>
+                    <div class="info-value-sub">Recepción Principal</div>
+                    
+                    <div class="map-card">
+                        <div style="font-family: 'Cinzel', serif; font-size: 11px; color: var(--text-light); font-weight: 600; letter-spacing: 1px;">
+                            Salón de Eventos: <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--text-muted);">Por definir</span>
+                        </div>
+                        <div class="map-wrapper">
+                            <iframe src="https://maps.google.com/maps?q=Jocotepec,%20Jalisco&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            
+            <div class="section-tag">Confirmación</div>
+            <p style="font-size: 13px; font-family: 'Montserrat', sans-serif; font-weight: 400; opacity: 0.9; margin-bottom: 5px;">Agradecemos confirmar tu asistencia antes del evento.</p>
+            <a href="https://wa.me/521234567890?text=¡Hola!%20Confirmo%20mi%20asistencia%20a%20los%20XV%20de%20Roxana." target="_blank" class="btn-whatsapp">Confirmar por WhatsApp</a>
+
+            <div class="divider"></div>
+            <div style="font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; color: var(--text-muted); margin-top: 20px; font-weight: 600;">INVYTIA PREVIEW DATA</div>
+        </div>
+    </main>
+
+    <script>
+        // Fecha del evento de Roxana
+        let targetDateObj = new Date("July 4, 2026 00:00:00"); 
+
+        document.addEventListener("DOMContentLoaded", function() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                
+                // Estos condicionales se mantienen por si quieres inyectar datos desde el configurador
+                if(params.has('nombre')) {
+                    const nombre = params.get('nombre');
+                    document.getElementById('main-nombre').textContent = nombre;
+                    document.getElementById('sobre-nombre').textContent = nombre;
+                }
+
+                if(params.has('ciudad')) {
+                    document.getElementById('main-ciudad').textContent = params.get('ciudad');
+                }
+
+                if(params.has('fecha') && params.get('fecha') !== '') {
+                    const fechaRaw = params.get('fecha'); 
+                    const partes = fechaRaw.split('-');
+                    if(partes.length === 3) {
+                        const year = partes[0];
+                        const monthNum = parseInt(partes[1], 10);
+                        const day = partes[2];
+                        const meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+                        document.getElementById('main-fecha').textContent = `${day}.${meses[monthNum - 1]}.${year}`;
+                        targetDateObj = new Date(`${fechaRaw}T00:00:00`); 
+                    }
+                }
+
+                const fotoLocal = sessionStorage.getItem('invytia_foto_preview');
+                if(fotoLocal) {
+                    document.getElementById('main-invitation').style.backgroundImage = `url('${fotoLocal}')`;
+                }
+
+                if(params.has('paleta')) {
+                    const root = document.documentElement;
+                    const p = params.get('paleta');
+                    // Si tienes más colores mapeados en el configurador, aplican aquí.
+                }
+            } catch (error) {
+                console.error("Error al procesar la configuración:", error);
+            }
+        });
+
+        function openEnvelope() {
+            document.querySelector('.envelope-wrapper').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-screen').classList.add('fade-out');
+                document.body.classList.add('content-active');
+                createFlowerPetals();
+            }, 1200);
+        }
+
+        const countdownInterval = setInterval(function() {
+            const timeLeft = targetDateObj.getTime() - new Date().getTime();
+            if (timeLeft < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown-timer").innerHTML = "<div style='font-family:\"Cinzel\", serif; color:var(--text-light); letter-spacing:2px; font-weight:600;'>¡Llegó el Gran Día!</div>";
+                return;
+            }
+            document.getElementById("days").innerText = Math.floor(timeLeft / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("hours").innerText = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((timeLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+
+        function createFlowerPetals() {
+            const container = document.getElementById('lanterns-container');
+            for (let i = 0; i < 25; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('flower-petal');
+                const width = Math.random() * 8 + 6;
+                petal.style.width = `${width}px`; petal.style.height = `${width * 1.3}px`;
+                petal.style.left = `${Math.random() * 100}%`; petal.style.bottom = `-30px`;
+                petal.style.backgroundColor = ['#e6d3c0', '#e8dcca', '#c5a880'][Math.floor(Math.random()*3)]; /* Mezcla de pétalos champagne */
+                petal.style.animationDuration = `${Math.random() * 10 + 7}s`;
+                petal.style.animationDelay = `${Math.random() * 6}s`;
+                container.appendChild(petal);
+            }
+        }
+    </script>
+</body>
+</html>
